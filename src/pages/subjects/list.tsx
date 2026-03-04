@@ -12,10 +12,25 @@ import {
 } from "@/components/ui/select";
 import { DEPARTMENTS_OPTIONS } from "@/constants";
 import { CreateButton } from "@/components/refine-ui/buttons/create";
+import { DataTable } from "@/components/refine-ui/data-table/data-table";
+import { useTable } from "@refinedev/react-table";
+import { Subject } from "@/types";
 
 const SubjectLists = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const subjectTable = useTable<Subject>({
+    columns: [],
+    refineCoreProps: {
+      resource: "subjects",
+      pagination: {
+        pageSize: 10,
+        mode: "server",
+      },
+      sorters: {},
+      filters: {},
+    },
+  });
 
   return (
     <ListView>
@@ -58,6 +73,7 @@ const SubjectLists = () => {
           <CreateButton />
         </div>
       </div>
+      <DataTable table={subjectTable} />
     </ListView>
   );
 };
