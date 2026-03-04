@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { CrudFilter } from "@refinedev/core";
 import { ListView } from "@/components/refine-ui/views/list-view";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
 import { Search } from "lucide-react";
@@ -15,20 +16,94 @@ import { CreateButton } from "@/components/refine-ui/buttons/create";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { useTable } from "@refinedev/react-table";
 import { Subject } from "@/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
 
 const SubjectLists = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
+
+  const departmentFilter: CrudFilter[] =
+    selectedDepartment === "all"
+      ? []
+      : [
+          {
+            field: "department",
+            operator: "eq",
+            value: selectedDepartment,
+          },
+        ];
+
+  const searchFilter: CrudFilter[] = searchQuery
+    ? [
+        {
+          field: "name",
+          operator: "contains",
+          value: searchQuery,
+        },
+      ]
+    : [];
+
   const subjectTable = useTable<Subject>({
-    columns: [],
+    columns: useMemo<ColumnDef<Subject>[]>(
+      () => [
+        {
+          id: "code",
+          accessorKey: "code",
+          size: 100,
+          header: () => <p className="column-title ml-2">Code</p>,
+          cell: ({ getValue }) => <Badge>{getValue<string>()}</Badge>,
+        },
+        {
+          id: "name",
+          accessorKey: "name",
+          size: 200,
+          header: () => <p className="column-title ml-2">Name</p>,
+          cell: ({ getValue }) => (
+            <span className="text-foreground">{getValue<string>()}</span>
+          ),
+          filterFn: "includesString",
+        },
+        {
+          id: "department",
+          accessorKey: "department",
+          size: 150,
+          header: () => <p className="column-title ml-2">Department</p>,
+          cell: ({ getValue }) => (
+            <Badge variant="secondary">{getValue<string>()}</Badge>
+          ),
+        },
+        {
+          id: "description",
+          accessorKey: "description",
+          size: 300,
+          header: () => <p className="column-title ml-2">Description</p>,
+          cell: ({ getValue }) => (
+            <span className="text-foreground truncate line- clamp-2">
+              {getValue<string>()}
+            </span>
+          ),
+        },
+      ],
+      [],
+    ),
     refineCoreProps: {
       resource: "subjects",
       pagination: {
         pageSize: 10,
         mode: "server",
       },
-      sorters: {},
-      filters: {},
+      sorters: {
+        initial: [
+          {
+            field: "id ",
+            order: "desc",
+          },
+        ],
+      },
+      filters: {
+        permanent: [...departmentFilter, ...searchFilter],
+      },
     },
   });
 
