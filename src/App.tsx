@@ -6,7 +6,6 @@ import routerProvider, {
   UnsavedChangesNotifier,
   DocumentTitleHandler,
 } from "@refinedev/react-router";
-import { dataProvider } from "./providers/data";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { Toaster } from "./components/refine-ui/notification/toaster";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
@@ -16,6 +15,7 @@ import { BookOpen, HomeIcon } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
 import SubjectLists from "./pages/subjects/list";
 import SubjectCreate from "./pages/subjects/create";
+import { dataProvider } from "./providers/data";
 
 function App() {
   return (

@@ -4,6 +4,7 @@ import {
   GetListParams,
   GetListResponse,
 } from "@refinedev/core";
+import { MOCK_SUBJECTS } from "./mock-data";
 
 export const dataProvider: DataProvider = {
   getList: async <TData extends BaseRecord = BaseRecord>({
@@ -13,8 +14,8 @@ export const dataProvider: DataProvider = {
       return { data: [] as TData[], total: 0 };
     }
     return {
-      data: [],
-      total: 0,
+      data: MOCK_SUBJECTS as unknown as TData[],
+      total: MOCK_SUBJECTS.length,
     };
   },
   getOne: async () => {
